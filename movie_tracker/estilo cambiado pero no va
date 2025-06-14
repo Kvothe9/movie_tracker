@@ -1,0 +1,161 @@
+<main>
+<body>
+<div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-film"></i>
+                <h1>MovieTracker</h1>
+            </div>
+            
+            <!-- Login/Register Section -->
+            <div id="auth-section">
+                <div class="login-form">
+                    <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Iniciar Sesión</h2>
+                    <div id="auth-alert"></div>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label class="form-label">Usuario o Email</label>
+                            <input type="text" class="form-input" id="login-username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-input" id="login-password">
+                        </div>
+                        <button type="submit" class="form-btn">
+                            <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                        </button>
+                    </form>
+                    <p style="text-align: center; margin-top: 20px; color: #666;">
+                        ¿No tienes cuenta? <a href="#" onclick="showRegister()" style="color: #667eea;">Regístrate aquí</a>
+                    </p>
+                    <p style="text-align: center; margin-top: 10px; color: #999; font-size: 0.9rem;">
+                        Usuario demo: <strong>demo</strong> / Contraseña: <strong>password</strong>
+                    </p>
+                </div>
+                
+                <div class="login-form" id="register-form" style="display: none;">
+                    <h2 style="text-align: center; margin-bottom: 30px; color: #333;">Crear Cuenta</h2>
+                    <div id="register-alert"></div>
+                    <form id="register-form-element">
+                        <div class="form-group">
+                            <label class="form-label">Usuario</label>
+                            <input type="text" class="form-input" id="register-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="register-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Contraseña</label>
+                            <input type="password" class="form-input" id="register-password" required>
+                        </div>
+                        <button type="submit" class="form-btn">
+                            <i class="fas fa-user-plus"></i> Crear Cuenta
+                        </button>
+                    </form>
+                    <p style="text-align: center; margin-top: 20px; color: #666;">
+                        ¿Ya tienes cuenta? <a href="#" onclick="showLogin()" style="color: #667eea;">Inicia sesión</a>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Main App Section (hidden initially) -->
+            <div id="main-app" style="display: none;">
+                <div class="user-info">
+                    <div class="welcome-msg">
+                        <i class="fas fa-user-circle"></i> 
+                        Bienvenido, <span id="username-display">Usuario</span>
+                    </div>
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </div>
+
+                <div class="nav-tabs">
+                    <button class="tab-btn active" onclick="showTab('search', this)">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
+                    <button class="tab-btn" onclick="showTab('watched', this)">
+                        <i class="fas fa-eye"></i> Vistas (<span id="watched-count">0</span>)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('watchlist', this)">
+                        <i class="fas fa-bookmark"></i> Lista (<span id="watchlist-count">0</span>)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('favorites', this)">
+                        <i class="fas fa-heart"></i> Favoritas (<span id="favorites-count">0</span>)
+                    </button>
+                    <button class="tab-btn" onclick="showTab('stats', this)">
+                        <i class="fas fa-chart-bar"></i> Stats
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Contents -->
+        <div id="search-tab" class="tab-content active">
+            <!-- API Setup -->
+            <div id="api-setup" class="api-setup">
+                <h3><i class="fas fa-key"></i> Configurar API de TMDB</h3>
+                <p>Para usar el buscador necesitas una API key de TMDB (gratuita):</p>
+                <input type="text" id="api-key-input" class="api-input" placeholder="Pega aquí tu API key de TMDB">
+                <button onclick="setApiKey()" class="api-btn">
+                    <i class="fas fa-save"></i> Guardar API Key
+                </button>
+                <p style="margin-top: 10px; font-size: 0.9rem;">
+                    <a href="https://www.themoviedb.org/settings/api" target="_blank" style="color: #667eea;">
+                        → Obtener API key gratuita en TMDB
+                    </a>
+                </p>
+            </div>
+
+            <h2><i class="fas fa-search"></i> Buscar Películas</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" id="movie-search" placeholder="Busca tu película favorita..." onkeypress="if(event.key==='Enter') searchMovies()">
+                <button class="search-btn" onclick="searchMovies()">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+            <div id="search-results" class="movies-grid"></div>
+        </div>
+
+        <div id="watched-tab" class="tab-content">
+            <h2><i class="fas fa-eye"></i> Películas Vistas</h2>
+            <div id="watched-movies" class="movies-grid"></div>
+        </div>
+
+        <div id="watchlist-tab" class="tab-content">
+            <h2><i class="fas fa-bookmark"></i> Lista de Pendientes</h2>
+            <div id="watchlist-movies" class="movies-grid"></div>
+        </div>
+
+        <div id="favorites-tab" class="tab-content">
+            <h2><i class="fas fa-heart"></i> Películas Favoritas</h2>
+            <div id="favorite-movies" class="movies-grid"></div>
+        </div>
+
+        <div id="stats-tab" class="tab-content">
+            <h2><i class="fas fa-chart-bar"></i> Tus Estadísticas</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-watched">0</div>
+                    <div class="stat-label">Películas Vistas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-watchlist">0</div>
+                    <div class="stat-label">En Lista</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-favorites">0</div>
+                    <div class="stat-label">Favoritas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avg-rating">0.0</div>
+                    <div class="stat-label">Puntuación Media</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</main>
+<?php require_once '../includes/footer.php'; ?>
+
